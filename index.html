@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Guedo Top Up</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+  padding:15px;
+  margin:0;
+}
+
+/* TITRES */
+h1{
+  text-align:center;
+  font-size:22px;
+  animation:glow 1s infinite alternate;
+}
+
+h2{
+  text-align:center;
+  font-size:18px;
+  color:#b0b0b0;
+}
+
+@keyframes glow{
+  from{ text-shadow:0 0 10px #00f7ff; }
+  to{ text-shadow:0 0 25px #00f7ff,0 0 40px #00f7ff; }
+}
+
+p{
+  color:#b0b0b0;
+}
+
+/* CARDS */
+.card{
+  background:#111;
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+}
+
+/* INPUTS */
+input,select,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  font-size:15px;
+  box-sizing:border-box;
+}
+
+/* BOUTONS */
+button{
+  background:#00ff88;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#00cc6a;
+  transform:scale(1.03);
+}
+
+button:active{
+  transform:scale(0.97);
+}
+
+/* PROGRESS */
+.progress{
+  width:100%;
+  height:8px;
+  background:#222;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+
+.progress-bar{
+  height:100%;
+  width:50%;
+  background:linear-gradient(90deg,#00f7ff,#00ff88);
+  transition:0.4s ease;
+}
+
+/* PACKS */
+.shop{
+  padding:10px 0;
+}
+
+.packs{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+
+.pack{
+  background:#1a1a2e;
+  padding:12px;
+  border-radius:15px;
+  text-align:center;
+  transition:0.3s;
+}
+
+.pack h3{
+  margin:5px 0;
+}
+
+.pack p{
+  margin:5px 0;
+}
+
+.pack.active{
+  border:2px solid #00ff88;
+  box-shadow:0 0 20px #00ff88;
+  transform:scale(1.03);
+}
+
+.pack.popular{
+  border:2px solid #00f7ff;
+}
+
+.pack.best{
+  border:2px solid gold;
+}
+
+.special{
+  background:linear-gradient(135deg,#1f1c2c,#928dab);
+}
+
+.badge{
+  display:inline-block;
+  background:#00f7ff;
+  color:black;
+  padding:5px 10px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+
+/* CONFIRMATION */
+.confirm{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.8);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.confirm-content{
+  background:#111;
+  padding:25px;
+  border-radius:15px;
+  text-align:center;
+  width:80%;
+  max-width:300px;
+  animation:pop 0.3s ease;
+}
+
+.check{
+  font-size:40px;
+  color:#00ff88;
+}
+
+@keyframes pop{
+  from{
+    transform:scale(0.7);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+.hidden{
+  display:none;
+}
+
+@media(max-width:400px){
+  .packs{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- CONFIRM -->
+<div id="confirmBox" class="confirm hidden">
+  <div class="confirm-content">
+    <div class="check">✔</div>
+    <h2>Commande envoyée !</h2>
+    <p>Ta commande a été transmise sur WhatsApp.</p>
+    <button onclick="closeConfirm()">OK</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div style="text-align:center;margin-bottom:15px;">
+  <h1>𝔾𝕌𝔼𝔻𝕆 𝕋𝕆ℙ 𝕌ℙ</h1>
+  <p style="font-size:13px;color:#aaa;">
+    💎 Recharge Free Fire instantanée
+  </p>
+</div>
+
+<p>
+⚡ Livraison en moins de 5 minutes<br>
+🔒 Paiement sécurisé via Mobile Money<br>
+🎮 Service fiable 24h/24
+</p>
+
+<!-- OFFRE -->
+<div class="card">
+  <b>🎁 OFFRE SPÉCIALE</b><br>
+  🔥 Nouveau client uniquement<br>
+  💎 1000 diamants = 10 000 FC<br>
+  ⏳ Offre limitée aujourd’hui
+</div>
+
+<!-- PROGRESS -->
+<div class="progress">
+  <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<!-- STEP 1 -->
+<div class="card" id="step1">
+
+  <input id="ffid" type="number" placeholder="Ton ID Free Fire">
+
+  <input id="pseudo" type="text" placeholder="Ton pseudo Free Fire">
+
+  <input id="whatsapp" type="tel" placeholder="Ton numéro WhatsApp (243...)">
+
+  <button onclick="nextStep()">
+    Suivant ➜
+  </button>
+
+</div>
+
+<!-- STEP 2 -->
+<div class="card hidden" id="step2">
+
+  <h2>💎 Choisis tes diamants</h2>
+
+  <div class="packs">
+
+    <div class="pack" onclick="selectPack(event,'100 💎 - 1.14$')">
+      <h3>100 💎</h3>
+      <p>1.14$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack" onclick="selectPack(event,'310 💎 - 3.44$')">
+      <h3>310 💎</h3>
+      <p>3.44$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack" onclick="selectPack(event,'520 💎 - 5.36$')">
+      <h3>520 💎</h3>
+      <p>5.36$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack popular" onclick="selectPack(event,'1060 💎 - 11.49$')">
+      <span class="badge">🔥 POPULAIRE</span>
+      <h3>1060 💎</h3>
+      <p>11.49$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack" onclick="selectPack(event,'2180 💎 - 22.24$')">
+      <h3>2180 💎</h3>
+      <p>22.24$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack best" onclick="selectPack(event,'5600 💎 - 52.93$')">
+      <span class="badge">⚡ MEILLEURE OFFRE</span>
+      <h3>5600 💎</h3>
+      <p>52.93$</p>
+      <button type="button">Choisir</button>
+    </div>
+
+  </div>
+
+  <h2>🎁 Offres spéciales</h2>
+
+  <div class="packs">
+
+    <div class="pack special" onclick="selectPack(event,'1000 Diamants Promo - 10 000 FC')">
+      <span class="badge">🔥 PROMO</span>
+      <h3>1000 💎</h3>
+      <p>10 000 FC</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack special" onclick="selectPack(event,'Booyah Pass')">
+      <h3>🎫 Booyah Pass</h3>
+      <p>Récompenses exclusives</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack special" onclick="selectPack(event,'Weekly Membership')">
+      <h3>📆 Weekly Membership</h3>
+      <p>Diamants chaque jour</p>
+      <button type="button">Choisir</button>
+    </div>
+
+    <div class="pack special" onclick="selectPack(event,'Monthly Membership')">
+      <h3>📅 Monthly Membership</h3>
+      <p>Bonus premium</p>
+      <button type="button">Choisir</button>
+    </div>
+
+  </div>
+
+  <!-- PRODUIT CACHÉ -->
+  <input type="hidden" id="product">
+
+  <!-- PAIEMENT -->
+  <select id="payment">
+    <option value="">Choisis paiement</option>
+    <option>M-Pesa</option>
+    <option>Airtel Money</option>
+    <option>Orange Money</option>
+  </select>
+
+  <p style="font-size:13px;color:#aaa;">
+    🔒 Paiement sécurisé – Aucun mot de passe demandé
+  </p>
+
+  <button id="orderBtn" onclick="sendOrder()">
+    🚀 Commander maintenant via WhatsApp
+  </button>
+
+</div>
+
+<script>
+
+let sending = false;
+
+/* STEP 1 -> STEP 2 */
+function nextStep(){
+
+  const ffid = document.getElementById("ffid").value.trim();
+  const pseudo = document.getElementById("pseudo").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
+
+  // VALIDATION
+  if(!ffid || !pseudo || !whatsapp){
+    alert("Remplis tous les champs");
+    return;
+  }
+
+  // ID uniquement chiffres
+  if(!/^\d+$/.test(ffid)){
+    alert("ID Free Fire invalide");
+    return;
+  }
+
+  // numéro whatsapp
+  if(!/^\d{9,15}$/.test(whatsapp)){
+    alert("Numéro WhatsApp invalide");
+    return;
+  }
+
+  // STEP SWITCH
+  document.getElementById("step1").classList.add("hidden");
+
+  document.getElementById("step2").classList.remove("hidden");
+
+  // PROGRESS
+  document.getElementById("progressBar").style.width = "100%";
+}
+
+/* SELECT PACK */
+function selectPack(event, pack){
+
+  document.getElementById("product").value = pack;
+
+  document.querySelectorAll(".pack").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  event.currentTarget.classList.add("active");
+}
+
+/* SEND ORDER */
+function sendOrder(){
+
+  if(sending) return;
+
+  if(!navigator.onLine){
+    alert("Pas de connexion internet");
+    return;
+  }
+
+  const ffid = document.getElementById("ffid").value.trim();
+  const pseudo = document.getElementById("pseudo").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
+
+  const product = document.getElementById("product").value;
+
+  const payment = document.getElementById("payment").value;
+
+  if(!product){
+    alert("Choisis un produit");
+    return;
+  }
+
+  if(!payment){
+    alert("Choisis un moyen de paiement");
+    return;
+  }
+
+  sending = true;
+
+  const btn = document.getElementById("orderBtn");
+
+  btn.disabled = true;
+  btn.innerText = "Envoi...";
+
+  const msg =
+`🔥 NOUVELLE COMMANDE FREE FIRE 🔥
+
+👤 Pseudo : ${pseudo}
+🆔 ID : ${ffid}
+📦 Produit : ${product}
+💳 Paiement : ${payment}
+📞 WhatsApp : ${whatsapp}`;
+
+  // AFFICHER CONFIRMATION
+  document.getElementById("confirmBox")
+    .classList.remove("hidden");
+
+  // OUVRIR WHATSAPP
+  setTimeout(()=>{
+
+    const url =
+    "https://wa.me/243995517899?text=" +
+    encodeURIComponent(msg);
+
+    window.location.href = url;
+
+  },1200);
+}
+
+/* CLOSE CONFIRM */
+function closeConfirm(){
+
+  document.getElementById("confirmBox")
+    .classList.add("hidden");
+}
+</script>
+
+</body>
+</html>
